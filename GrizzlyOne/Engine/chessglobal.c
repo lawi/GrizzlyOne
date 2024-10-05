@@ -4,7 +4,7 @@
  * Created: 29.01.2022 19:51:47
  *  Author: Michael Lawatsch
  */
-#include <avr/io.h>
+// #include <avr/io.h>
 
 #include "chessglobals.h"
 
@@ -13,6 +13,7 @@
 
 uint8_t board[128];
 Move mvList[MAX_MOVECOUNT];
+Move line[23];
 HalfMove hm[MAX_HMCOUNT];
 uint8_t maxDepth;
 uint8_t side;

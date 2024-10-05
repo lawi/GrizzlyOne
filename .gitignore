@@ -1,0 +1,4 @@
+*.o
+.DS_Store
+grizzly
+GrizzlyOne/PC/grizzlyone.dSYM/Contents/Resources/DWARF/grizzlyone

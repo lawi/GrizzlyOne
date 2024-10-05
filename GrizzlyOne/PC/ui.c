@@ -5,12 +5,53 @@
  *  Author: lawi
  */
 #include "../engine.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 const char pieceChars[8] = { 'X','P','N','B','R','Q','K','X' };
-void printMove(uint8_t from, uint8_t to) {
+void printMoveSimple(uint8_t from, uint8_t to) {
     //setColor(COLOR_YELLOW);
-    printf("%02X-%02X  ",from,to)
+    printf("%02X-%02X  ",from,to);
     //setColor(COLOR_WHITE);
+}
+void printMove(uint8_t from, uint8_t to) {
+     char moveString[8];
+    int i=0;
+    if ((board[from]&7)>PAWN) {
+        moveString[i++] = pieceChars[board[from]&7];
+    }
+    moveString[i++] = (from & 0x07)+'a';
+    moveString[i++] = ((from & 0x70)>>4)+'1';
+    // if ((board[from]&7)!=PAWN) {
+    //     if (board[to]!=EMPTY) {
+    //         moveString[i++]='x';
+    //     } else {
+    moveString[i++]='-';
+    //     }
+    // }
+    moveString[i++] = (to & 0x07)+'a';
+    
+    if ((board[from])==WPAWN && from >= SQ_A7) {
+        moveString[i++] = '8';
+        moveString[i++] = pieceChars[(board[to]>>4) & 0x07];
+    } else if ((board[from])==BPAWN && from <= SQ_H2) {
+        moveString[i++] = '1';
+        moveString[i++] = pieceChars[(board[to]>>4) & 0x07];
+    } else {
+        moveString[i++] = ((to & 0x70) >> 4)+'1';
+    }
+    moveString[i]=0;
+    printf("%s ",moveString);
+}
+
+void printLine(int count) {
+    int i;
+    printf("LINE: ");
+    for (i=0;i<count;i++) {
+        printMove(line[i].from,line[i].to);
+    }
+    printf("\n");
+
 }
 
 void printBoard() {
@@ -33,13 +74,13 @@ void printBoard() {
             else if (p&WMASK) {
                 a = pieceChars[p&7];
                 //setColor(COLOR_GREEN);
-                if (a=='X')
+                //if (a=='X')
                 //setColor(COLOR_RED);
             }
             else if(p&BMASK) {
                 a = pieceChars[p&7] + off;
                 //setColor(COLOR_MANGENTA);
-                if (a=='x')
+                //if (a=='x')
                 //setColor(COLOR_RED);
             }
             else if(p==EMPTY) {
@@ -62,7 +103,7 @@ void printBoard() {
 void printMovelist(uint8_t p) {
     Move* pMoves = hm[p].firstEntry;
     int16_t i = 0;
-    printf("Move list at %04X \n\r---------\n\r",(uint16_t)hm[p].firstEntry);
+    printf("Move list at %04lX \n\r---------\n\r",hm[p].firstEntry);
     while((pMoves < hm[p+1].firstEntry) && (pMoves->from != 0xff) && (pMoves->to != 0xff)) {
         printMove(pMoves->from,pMoves->to);
         pMoves++;

@@ -25,3 +25,11 @@ It will be possible to test the chess engine on Linux, Windows or anywhere else 
 The enigine will get a winboard interface to be tested with some chess frontends.
 <br><br>
 But it is not finished yet. So just wait and keep it watching.
+
+## Platforms
+### Grizzly One Board
+GrizzlyOne is meant to run on the GrizzlyOne board. But because of limited debugging resources a second version has been made.
+### GrizzlyOne makefile project
+While sharing one engine the UI is seperated for AVR and desktop. The desktop part is meant for develope and debug the engine. It will have not many features in the beginning.
+
+It will support WindBoard and / or UCI protocol maybe later to use it as competing version for development of other Grizzly Engines.

@@ -1,0 +1,14 @@
+{
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "make grizzlyone",
+            "command": "make",
+            "args": [],
+            "problemMatcher":[],
+            
+            
+        }
+    ],
+    "version": "2.0.0"
+}

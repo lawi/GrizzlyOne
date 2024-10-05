@@ -8,9 +8,9 @@
 #ifndef MOVEMAKE_H_
 #define MOVEMAKE_H_
 
-uint8_t nextMove();
+uint8_t nextMove(uint8_t capture);
 void backMove();
-void doMove();
+void doMove(uint8_t from, uint8_t to);
 void undoMove();
 
 uint8_t inCkeck();

@@ -5,7 +5,7 @@
  *  Author: Michael Lawatsch
  */
 
-#include <avr/io.h>
+// #include <avr/io.h>
 #include "chessglobals.h"
 #include "chessutils.h"
 #include "movegen.h"
@@ -41,6 +41,8 @@ uint8_t nextMove(uint8_t capture) {
     hm[ply+1].capture = EMPTY;
     hm[ply].actFrom   = 0xff;
     hm[ply].actTo     = 0xff;
+    line[ply].from = 0xff;
+    line[ply].to = 0xff;
     hm[ply+1].wKingPos = hm[ply].wKingPos;
     hm[ply+1].bKingPos = hm[ply].bKingPos;
 
@@ -168,6 +170,7 @@ uint8_t nextMove(uint8_t capture) {
                 dbgSendHexByte(hm[ply].actEntry->from);
                 dbgPuts("\n\r");
                 dbgSetColor(COLOR_WHITE);
+                printLine(ply);
                 printBoard();
                 criticalError = 1;
                 foundMove = 0;
@@ -177,6 +180,8 @@ uint8_t nextMove(uint8_t capture) {
         if (foundMove) {
             hm[ply].actFrom = hm[ply].actEntry->from;
             hm[ply].actTo = hm[ply].actEntry->to;
+            line[ply].from = hm[ply].actFrom;
+            line[ply].to = hm[ply].actTo;
             hm[ply].actEntry++;
             // incremental material calculation
             if (side==WHITE) {
@@ -207,7 +212,8 @@ void backMove() {
     pt = hm[ply].actEntry-1;
     side = OTHER(side);
     if (pt->to & PROMO_FLAG) { // take back promotions
-        board[(pt->to&0xf) | (side == WHITE_MOVE) ? SQ_A8 : SQ_A1] = hm[ply].capture;
+        //TODO: hier ist evtl noch was faul. 
+        board[(pt->to&0x7) | ((side == WHITE_MOVE) ? SQ_A8 : SQ_A1)] = hm[ply].capture;
         board[pt->from] = PAWN|side;
         hm[ply].capture = EMPTY;
     } else if ((board[pt->to] & 7) == PAWN  && pt->to == hm[ply].ep) {
@@ -239,6 +245,9 @@ void backMove() {
         board[pt->to] = hm[ply].capture;
         hm[ply].capture = EMPTY;
     }
+    line[ply].from = 0xff;
+    line[ply].to = 0xff;
+
     //checkBoard();
 }
 

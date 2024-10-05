@@ -4,7 +4,7 @@
  * Created: 30.01.2022 00:32:55
  *  Author: Michael Lawatsch
  */
-#include <avr/io.h>
+// #include <avr/io.h>
 #include "chessglobals.h"
 //#include "../AVR/gzuart.h"
 #include "../user.h"
@@ -54,7 +54,7 @@ uint8_t moveGen() {
             case PAWN:
                 to = (side==WHITE) ? i+0x10 : i-0x10;
                 if (to >= SQ_A8 || to <= SQ_H1) {
-                    for (foff = KNIGHT<<4; foff <= QUEEN<<4; i+=0x10) {
+                    for (foff = KNIGHT<<4; foff <= QUEEN<<4; foff+=0x10) {
                         pMoves->from = i;
                         pMoves->to = (to&0xf)|foff|PROMO_FLAG;
                         pMoves++;
@@ -77,15 +77,16 @@ uint8_t moveGen() {
                 for (h=0x0F; h<=0x11; h+=2) { // capturing moves (left an right)
                     to = (side==WHITE)? i+h : i-h;
                     if (!(to&0x88) && (OTHER(side) & board[to])) {
-                        pMoves->from = i;
-                        pMoves->to = to;
-                        pMoves++;
                         if(to >= SQ_A8 || to <= SQ_H1) {
-                            for (foff = KNIGHT<<4; foff <= QUEEN<<4; i+=0x10) {
+                            for (foff = KNIGHT<<4; foff <= QUEEN<<4; foff+=0x10) {
                                 pMoves->from = i;
                                 pMoves->to = (to&0xf)|foff|PROMO_FLAG;
                                 pMoves++;
                             }
+                        } else {
+                            pMoves->from = i;
+                            pMoves->to = to;
+                            pMoves++;
                         }
                     }
                 }
@@ -211,6 +212,7 @@ uint8_t captureMoveGen() {
     uint8_t  to;
     Move* pMoves = hm[ply].firstEntry;
     int8_t foff;
+    int cmn =0;
     for (i=SQ_A1; i<=SQ_H8; i++) {
         if (OUTSIDE(i))  i+=8;
         if (!board[i]) continue;
@@ -220,24 +222,28 @@ uint8_t captureMoveGen() {
             case PAWN:
             to = (side==WHITE) ? i+0x10 : i-0x10;
             if (to >= SQ_A8 || to <= SQ_H1) {
-                for (foff = KNIGHT<<4; foff <= QUEEN<<4; i+=0x10) {
+                for (foff = KNIGHT<<4; foff <= QUEEN<<4; foff+=0x10) { 
                     pMoves->from = i;
                     pMoves->to = (to&0xf)|foff|PROMO_FLAG;
                     pMoves++;
+                    cmn++;
                 }
             }
             for (h=0x0F; h<=0x11; h+=2) { // capturing moves (left an right)
                 to = (side==WHITE)? i+h : i-h;
                 if (ON_BOARD(to) && (OTHER(side) & board[to])) {
-                    pMoves->from = i;
-                    pMoves->to = to;
-                    pMoves++;
+                     cmn++;
                     if(to >= SQ_A8 || to <= SQ_H1) {
-                        for (foff = KNIGHT<<4; foff <= QUEEN<<4; i+=0x10) {
+                        for (foff = KNIGHT<<4; foff <= QUEEN<<4; foff+=0x10) {
                             pMoves->from = i;
                             pMoves->to = (to&0xf)|foff|PROMO_FLAG;
                             pMoves++;
+                            cmn++;
                         }
+                    } else {
+                        pMoves->from = i;
+                        pMoves->to = to;
+                        pMoves++;       
                     }
                 }
             }
@@ -246,6 +252,7 @@ uint8_t captureMoveGen() {
                 pMoves->from = i;
                 pMoves->to = hm[ply].ep;
                 pMoves++;
+                cmn++;
             }
             break;
             case BISHOP:
@@ -269,6 +276,7 @@ uint8_t captureMoveGen() {
                     pMoves->from = i;
                     pMoves->to = to;
                     pMoves++;
+                    cmn++;
                 }
             }
             break;
@@ -293,6 +301,7 @@ uint8_t captureMoveGen() {
                         pMoves->from = i;
                         pMoves->to  = to;
                         pMoves++;
+                        cmn++;
                         break;
                     } else {
                         break;

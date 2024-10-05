@@ -4,8 +4,8 @@
  * Created: 01.02.2022 19:12:25
  *  Author: Michael Lawatsch
  */
-#include <avr/io.h>
-#include <avr/iom644.h>
+//#include <avr/io.h>
+//#include <avr/iom644.h>
 #include "../user.h"
 #include "chessglobals.h"
 #include "eval.h"
@@ -111,6 +111,7 @@ uint8_t checkBoard() {
                 break;
             default:
                 criticalError = 4;
+                #ifdef AVR_BUILD
                 dbgSetColor(COLOR_RED);
                 dbgPuts("CheckBoard found piece ");
                 dbgSendHexByte(board[i]);
@@ -119,6 +120,7 @@ uint8_t checkBoard() {
                 dbgSendHexWord((uint16_t)board);
                 dbgPuts("\n\r");
                 dbgSetColor(COLOR_WHITE);
+                #endif
                 printBoard();
                 return 0;
         }

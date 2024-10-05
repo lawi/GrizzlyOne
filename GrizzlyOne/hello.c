@@ -2,6 +2,6 @@
 #include <stdlib.h>
 
 void main(char ** argv, int argc) {
-    printf("Hello World,\nhoware you?\n");
+    printf("Hello World,\nhow are you?\n");
     exit(0);
 }

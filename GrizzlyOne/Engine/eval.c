@@ -5,7 +5,7 @@
  *  Author: Michael Lawatsch
  */
 
-#include <avr/io.h>
+// #include <avr/io.h>
 #include "chessglobals.h"
 
 const uint16_t valPieces[7] = {0, VAL_PAWN, VAL_KNIGHT, VAL_BISHOP, VAL_ROOK, VAL_QUEEN, VAL_KING };

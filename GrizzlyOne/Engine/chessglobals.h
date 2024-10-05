@@ -38,6 +38,7 @@ typedef struct {
 
 extern uint8_t  board[];
 extern Move     mvList[];
+extern Move     line[];
 extern HalfMove hm[];
 extern uint8_t  maxDepth;
 extern volatile uint8_t displayDigit;
@@ -181,7 +182,7 @@ extern const int8_t moffQueen[];
 #define COLOR_WHITE    7
 
 #define MAX_HMCOUNT    22
-#define MAX_MOVECOUNT  300
+#define MAX_MOVECOUNT  3000
 
 
 #endif /* CHESSGLOBALS_H_ */
